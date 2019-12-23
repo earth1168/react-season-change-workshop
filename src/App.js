@@ -1,22 +1,21 @@
-import React from "react";
-import logo from "./logo.svg";
+import React from "react"; //ประกาศใช้งาน react
 import "./App.css";
-import moment from "moment";
-import Input from "./Input.js";
-import axios from "axios";
+import moment from "moment"; //lib เกี่ยวกับการจับเวลา นับเวลา
+import Input from "./Input.js"; // เอา component ของไฟล์ input.js มาใช้
+import axios from "axios"; // lib เกี่ยวกับการจัดการ API
 
 const subjects = ["Angular", "React", "Golang"];
-const targetDate = moment("12/21/2019 17:00:00");
+const targetDate = moment("12/21/2019 17:00:00"); //เวลาที่ต้องการจะเทียบ
 function App() {
-  const [name, setName] = React.useState("");
-  const [mail, setMail] = React.useState("");
+  const [name, setName] = React.useState("");   //ใช้งาน react state (การใช้ state ทำให้ค่าเปลี่ยนแปลงได้)
+  const [mail, setMail] = React.useState("");   //ในกรณีนี้ ตัวแปรตัวแรกคือตัวแปรที่ใช้เก็บข้อมูล ตัวแปร set คล้าย ๆ กับการ trigger 
   const [selectsubject, setSelectSubject] = React.useState("");
   const [agree, setAgree] = React.useState("");
   const [timer, setTimer] = React.useState("");
   const [message, setMessage] = React.useState("");
   const [isLoading, setIsLoading] = React.useState("");
 
-  const handleSubmit = () => {
+  const handleSubmit = () => { 
     setIsLoading(true);
     axios
       .get(
@@ -29,7 +28,7 @@ function App() {
       });
   };
 
-  const updateTimer = () => {
+  const updateTimer = () => { //เทียบเวลาปัจจุบันว่าอีกกี่ชั่วโมงจะถึงกับเวลาที่กำหนดด้านบน
     const diffHours = targetDate.diff(moment(), "hours");
     const diffMinutes = targetDate.diff(moment(), "minutes") % 60;
     const diffSeconds = targetDate.diff(moment(), "seconds") % 60;
@@ -39,7 +38,7 @@ function App() {
     );
     // console.log(diffHours, diffMinutes, diffSeconds);
   };
-  React.useEffect(() => {
+  React.useEffect(() => { //ทำให้ข้อมูลมีการ update ทุก ๆ 1s. 
     const interval = setInterval(updateTimer, 1000);
     axios
       .get(
@@ -52,19 +51,19 @@ function App() {
     return () => clearInterval(interval);
   }, []);
 
-  console.log("State", { name, mail, selectsubject, agree });
+  console.log("State", { name, mail, selectsubject, agree }); //ทุกการเปลี่ยนแปลงที่เกิดขึ้นกับข้อมูลจะถูก print บน console
   return (
     <div className="App">
       <div className="title">Seasons change Registration form</div>
       <p>Form ends in </p>
       <p>{timer}</p>
-      <Input
-        label="Name"
-        value={name}
-        onChangeFromComponent={value => setName(value)}
+      <Input        // <Input /> เป็น component ที่ export มาจากไฟล์ Input.js
+        label="Name" //ข้อมูลที่ส่งไปให้ Input.js มี 3 ตัว; label = ชื่อ
+        value={name} //value = ค่าที่ต้องการจะบันทึก
+        onChangeFromComponent={value => setName(value)} //ตัว trigger (setName)
       />
       <Input
-        label="Email"
+        label="Email" //เทียบ <Input /> จากโค้ดที่คอมเม้นด้านล่างได้
         value={mail}
         onChangeFromComponent={value => setMail(value)}
       />
@@ -108,10 +107,10 @@ function App() {
         <div className="control">
           <div className="select">
             <select
-              value={selectsubject}
+              value={selectsubject} //เก็บการเปลี่ยนแปลงลงใน selectsubject
               onChange={event => setSelectSubject(event.target.value)}
             >
-              {subjects.map(subjects => (
+              {subjects.map(subjects => (     //map คือการวนข้อมูลใน const มาแสดงทั้งหมด (ในโค้ดนี้คือวิชา มี 3 อย่สงคือ angular react golang)
                 <option key={subjects}>{subjects}</option>
               ))}
             </select>
@@ -125,7 +124,7 @@ function App() {
             <input
               type="checkbox"
               value={agree}
-              onChange={event => setAgree(event.target.checked)}
+              onChange={event => setAgree(event.target.checked)} //กล่องประเภท checkbox ใช้ event.target.checked ไม่เหมือนอันอื่นที่ใช้ event.target.value
             />
             I agree to the <a href="#">terms and conditions</a>
           </label>
@@ -135,9 +134,9 @@ function App() {
       <div className="field is-grouped">
         <div className="control">
           <button
-            className={`button is-link ${isLoading && "is-loading"}`}
-            onClick={handleSubmit}
-            disabled={isLoading}
+            className={`button is-link ${isLoading && "is-loading"}`} //เช็คว่าปุ่มได้ถูกกดหรือไม่ ถ้าถูกกด ปุ่มจะแสดงเป็นหมุน ๆ ()
+            onClick={handleSubmit} //isLoading && "is-loading คือการเช็คประมานว่า ถ้า isLoading เป็น true จะทำให้ button className = "is-loading" (หมุน) แต่ถ้าเป็น false className = button-is-link (ปุ่มปกติ)
+            disabled={isLoading} //กดแล้วปุ่มเทา ๆ 
           >
             Submit
           </button>
@@ -146,7 +145,7 @@ function App() {
           <button className="button is-link is-light">Cancel</button>
         </div>
       </div>
-      <p>{message}</p>
+      <p>{message}</p> 
     </div>
   );
 }
